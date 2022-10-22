@@ -1,0 +1,43 @@
+/* You can add global styles to this file, and also import other style files */
+:root{
+    font-family: 'coolvetica';
+    font-weight: 100;
+
+    --fill_empty:#999899aa;
+}
+body{
+    background: whitesmoke;
+}
+@font-face {
+    font-family: 'coolvetica';
+    src: url('../src/assets/fonts/coolvetica.otf');
+}
+
+@font-face {
+    font-family: 'funky';
+    src: url('assets/fonts/balonku.otf');
+}
+
+.hidden{
+    display: none !important;
+}
+
+.funky-text{
+    font-family: 'funky';
+}
+
+.cant-sign-label{
+	background: #ee110033;
+	border-radius: 2px;
+	width: 102%;
+	text-align: center;
+	align-self: center;
+}
+
+.coolvetica-text{
+    font-family: 'coolvetica';
+}
+
+.clickable{
+    cursor: pointer;
+}
