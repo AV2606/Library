@@ -1,7 +1,21 @@
 <div ngClass="navbar">
-    <input #searchbar type="text" name="searchbar" placeholder="e.x. peter pen">
-    
+    <div>
+        <label for="serachbaar" ngClass="coolvetica-text">Search: &nbsp;</label>
+        <input #searchbar type="text" name="searchbar" ngClass="searchbar" placeholder="e.x. peter pen"> &nbsp;
+        <img title="search" (click)="filterBooks(searchbar.value)" ngClass="clickable" height="18px"
+            [src]="'https://cdn-icons-png.flaticon.com/128/149/149852.png'" alt="search">&nbsp;
+        <img title="reset" (click)="resetBooks()" [src]="'https://recipeswild.com/images/items/reset.png'"
+            ngClass="clickable" height="18px" alt="reset">
+    </div>
 </div>
-<div>
-    this is body
+<div ngClass="books-container">
+    <div ngClass="coolvetica-text book-window" *ngFor="let b of filteredBooks">
+        <span ngClass="titles">
+            <h4>{{b.title}}</h4>
+            <h5>by: {{b.author}}</h5>
+        </span>
+        <img [src]="b.imgSrc" alt="{{b.title}}" height="100px">
+        <button ngClass="btn btn-outline-success">Borrow</button>
+        <hr>
+    </div>
 </div>
