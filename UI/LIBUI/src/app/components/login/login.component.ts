@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UsersService, SignUpStatus, UserData } from 'src/app/services/login.service';
 
 
@@ -15,18 +16,19 @@ export class LoginComponent implements OnInit {
   showInvalidMail = false;
   showTakenMail = false;
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   async signIn(userName: any, password: any) {
-    let ans = await this.usersService.Login(userName, password);
+    let ans = await this.usersService.Login(userName, password, this.rememberMe);
     console.log(ans);
 
     if (ans == false)
       document.getElementsByClassName('cant-sign-label')[0].classList.remove('hidden');
-
+    else
+      this.router.navigate(['home']);
   }
 
   async signUp(username: any, email: string, pass1: any, pass2: any) {

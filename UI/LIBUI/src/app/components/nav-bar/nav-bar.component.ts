@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { UsersService } from 'src/app/services/login.service';
 import { runInThisContext } from 'vm';
 
 @Component({
@@ -8,8 +9,15 @@ import { runInThisContext } from 'vm';
 })
 export class NavBarComponent implements OnInit {
   lastActiveEl: any;
+  showAdmin = false;
 
-  constructor() {
+  constructor(private usersService: UsersService) {
+    let show = () => {
+      usersService.isCurrentUserAdmin().then(resolve => {
+        this.showAdmin = resolve;
+      });
+    }
+    usersService.addUserChangeEventListener(show);
   }
 
   ngOnInit(): void {

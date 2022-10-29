@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { stat } from 'fs';
 
 @Injectable({
@@ -7,12 +8,13 @@ import { stat } from 'fs';
 export class UsersService {
 
 
-  isDev = true;
+  isDev = false;
 
   private users: User[] = [{ userName: 'av', password: '123456', isAdmin: true, email: 'mail@example.com' }]
   private readonly token = 'token';
+  userChange: Function[] = [];
 
-  constructor() {
+  constructor(private router: Router) {
 
     console.log('ive been contructed');
 
@@ -20,6 +22,29 @@ export class UsersService {
       console.log('remember to make real values');
       sessionStorage.setItem(this.token, 'av');
     }
+  }
+
+
+  goToLogin() {
+    this.router.navigate(['login']);
+    console.log('login');
+
+  }
+
+  addUserChangeEventListener(callback: Function) {
+    this.userChange.push(callback);
+  }
+
+  private async invokeUserChangeEvent() {
+    this.userChange.forEach(element => {
+      try {
+        element();
+      }
+      catch (error) {
+        console.log(error);
+
+      }
+    });
   }
 
 
@@ -45,12 +70,14 @@ export class UsersService {
           }
         }
     });
+    this.invokeUserChangeEvent();
     return r;
   }
 
   async logOut() {
     sessionStorage.setItem(this.token, '');
     localStorage.setItem(this.token, '');
+    this.invokeUserChangeEvent();
   }
 
   private getUserToken() {
@@ -72,25 +99,30 @@ export class UsersService {
       sessionStorage.setItem(this.token, newtoken);
     else
       localStorage.setItem(this.token, newtoken);
+    this.invokeUserChangeEvent();
   }
 
   async isUserLoggedIn() {
-    if (sessionStorage.getItem(this.token) != '')
+    let stoken = sessionStorage.getItem(this.token);
+    let ltoken = localStorage.getItem(this.token);
+
+    if (stoken != null && stoken != '')
       return true;//sessionStorage.getItem(token);
-    if (localStorage.getItem(this.token) != '')
+    if (ltoken != null && ltoken != '')
       return true;//localStorage.getItem(token);
     return false;
   }
 
-  async isAdmin(userName: string, password: string) {
-    let r = false;
+  async isCurrentUserAdmin() {
+    let t = await this.getUserToken();
+    let u: User | undefined = undefined;
     this.users.forEach(element => {
-      if (element.userName == userName)
-        if (element.password == password)
-          if (element.isAdmin)
-            r = true;
+      if (element.userName == t)
+        u = element;
     });
-    return r;
+    if (u === undefined)
+      return false;
+    return (u as any).isAdmin;
   }
 
   async signUp(username: string, email: string, password: string) {
@@ -115,6 +147,8 @@ export class UsersService {
     });
 
     sessionStorage.setItem(this.token, username);
+
+    this.invokeUserChangeEvent();
 
     return new UserData(username, email);
   }

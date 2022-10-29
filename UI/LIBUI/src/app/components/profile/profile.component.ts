@@ -28,6 +28,10 @@ export class ProfileComponent implements OnInit {
   constructor(private UsersService: UsersService) {
     this.getInfo();
     this.resetIndicators();
+    UsersService.isUserLoggedIn().then(resolve=>{
+      if(!resolve)
+      UsersService.goToLogin();
+    })
   }
 
 
