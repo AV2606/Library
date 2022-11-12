@@ -17,6 +17,7 @@ export class NavBarComponent implements OnInit {
         this.showAdmin = resolve;
       });
     }
+    show();
     usersService.addUserChangeEventListener(show);
   }
 

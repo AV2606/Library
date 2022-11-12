@@ -47,6 +47,7 @@ export class ProfileComponent implements OnInit {
 
   async logOut() {
     this.UsersService.logOut();
+    this.UsersService.goToLogin();
   }
 
   resetIndicators() {
